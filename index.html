@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>玄炉 XUANFORGE · 赛博炼丹炉 LoRA 训练台</title>
+<meta name="description" content="玄炉 XuanForge — 一个把 LoRA 训练做成赛博炼丹的中文产品原型：图像、视频、音频、语言，万模一炉。" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23060910'/%3E%3Ccircle cx='32' cy='30' r='13' fill='none' stroke='%233ef0c0' stroke-width='2.5'/%3E%3Ccircle cx='32' cy='30' r='5' fill='%23f5c96b'/%3E%3Cpath d='M18 48h28' stroke='%233ef0c0' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/furnace.css" />
+<link rel="stylesheet" href="css/views.css" />
+</head>
+<body data-view="furnace" data-state="idle">
+<div class="ambient" aria-hidden="true">
+  <div class="ambient__stars"></div>
+  <div class="ambient__grid"></div>
+  <div class="ambient__glow ambient__glow--a"></div>
+  <div class="ambient__glow ambient__glow--b"></div>
+  <div class="ambient__scan"></div>
+  <div class="ambient__noise"></div>
+</div>
+
+<div class="app">
+
+  <!-- ======================= TOP BAR ======================= -->
+  <header class="topbar">
+    <a class="brand" href="#furnace" aria-label="玄炉首页">
+      <span class="brand__sigil" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="21" stroke="url(#gs)" stroke-width="1"/>
+          <circle cx="24" cy="24" r="15.5" stroke="currentColor" stroke-width=".8" stroke-dasharray="2 5" opacity=".65"/>
+          <path d="M15 27c0-5.5 3-8 5-10 1 3 2.4 4 3.4 5 1-2 1.4-4 2.6-6 2 3 7 6.5 7 11a9 9 0 0 1-18 0Z" fill="url(#gf)" opacity=".95"/>
+          <circle cx="24" cy="28.5" r="2.6" fill="#fff" opacity=".9"/>
+          <defs>
+            <linearGradient id="gs" x1="0" y1="0" x2="48" y2="48"><stop stop-color="#3ef0c0"/><stop offset="1" stop-color="#7c6cff"/></linearGradient>
+            <linearGradient id="gf" x1="24" y1="15" x2="24" y2="38"><stop stop-color="#f5c96b"/><stop offset="1" stop-color="#ff6b4a"/></linearGradient>
+          </defs>
+        </svg>
+      </span>
+      <span class="brand__text">
+        <b>玄炉</b><i>XUANFORGE</i>
+      </span>
+    </a>
+
+    <div class="topbar__center">
+      <span class="sys-pill"><i class="dot"></i>灵脉已通 <b>GPU-0 · 24G</b></span>
+      <span class="topbar__crumb" id="crumb">丹房 / Furnace</span>
+    </div>
+
+    <div class="topbar__actions">
+      <button class="icon-btn" id="btn-sound" title="炉音已启 · 点击静音" aria-pressed="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7" opacity=".7"/><path class="muted-line" d="M4.5 4.5 19.5 19.5" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn" id="btn-guide" title="快捷键与说明">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 9.4a2.4 2.4 0 1 1 3.3 2.2c-.7.3-1 .9-1 1.7"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/></svg>
+      </button>
+      <div class="seal-avatar" title="丹主 · 未结丹">
+        <span>丹</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================= LEFT RAIL ======================= -->
+  <nav class="rail" aria-label="主导航">
+    <button class="rail__item is-active" data-nav="furnace">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 10h14l-1.4 8.2a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8L5 10Z"/><path d="M4 10h16M9 6.5c0-1 1-1.4 1-2.5M13 6.5c0-1 1-1.4 1-2.5"/></svg>
+      <span>丹房</span>
+    </button>
+    <button class="rail__item" data-nav="codex">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5V5.5Z"/><path d="M19 18v3H6.5A2.5 2.5 0 0 1 4 18.5"/><path d="M8 7h7M8 10.5h5"/></svg>
+      <span>模型谱</span>
+    </button>
+    <button class="rail__item" data-nav="recipes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h3.5"/></svg>
+      <span>丹方</span>
+    </button>
+    <button class="rail__item" data-nav="materials">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="10" r="1.7"/><path d="M4 17l5-5 4 4 3-3 4 4"/></svg>
+      <span>灵材</span>
+    </button>
+    <button class="rail__item" data-nav="methods">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="4"/></svg>
+      <span>功法</span>
+    </button>
+    <button class="rail__item" data-nav="market">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 9.5 6 4h12l2 5.5"/><path d="M4 9.5a2.5 2.5 0 0 0 4.6 1.2A2.5 2.5 0 0 0 12 10a2.5 2.5 0 0 0 3.4.7A2.5 2.5 0 0 0 20 9.5"/><path d="M5.5 12v8h13v-8M10 20v-4.5h4V20"/></svg>
+      <span>丹市</span>
+    </button>
+    <button class="rail__item" data-nav="logs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m5 7 4 4-4 4M12 17h7"/><rect x="3" y="3.5" width="18" height="17" rx="2.5"/></svg>
+      <span>天机录</span>
+    </button>
+    <div class="rail__spacer"></div>
+    <div class="rail__qi" title="灵脉负载">
+      <span class="rail__qi-label">灵脉</span>
+      <div class="rail__qi-track"><i id="rail-gpu" style="height:18%"></i></div>
+      <span class="rail__qi-num" id="rail-gpu-num">18%</span>
+    </div>
+  </nav>
+
+  <!-- ======================= MAIN ======================= -->
+  <main class="main" id="main">
+
+    <!-- ---------- FURNACE VIEW ---------- -->
+    <section class="view view--furnace" id="view-furnace">
+
+      <div class="stage-top">
+        <div class="hud-chip" data-side="tl">
+          <span class="hud-chip__k">炉温 · HEAT</span>
+          <span class="hud-chip__v"><b id="v-temp">36</b><i>°C</i></span>
+          <span class="hud-chip__bar"><i id="b-temp"></i></span>
+        </div>
+        <div class="phase" id="phase">
+          <span class="phase__tag" id="phase-tag">天机未动</span>
+          <span class="phase__main" id="phase-main">炉火自温 · 待开炉</span>
+          <span class="phase__sub" id="phase-sub">选择炉鼎与丹方，投下灵材</span>
+        </div>
+        <div class="hud-chip hud-chip--right" data-side="tr">
+          <span class="hud-chip__k">丹压 · VRAM</span>
+          <span class="hud-chip__v"><b id="v-vram">0.0</b><i>/24G</i></span>
+          <span class="hud-chip__bar"><i id="b-vram"></i></span>
+        </div>
+      </div>
+
+      <div class="scene" id="scene">
+        <div class="scene__halo"></div>
+        <canvas class="fx fx--back" id="fx-back" aria-hidden="true"></canvas>
+
+        <svg class="furnace" id="furnace-svg" viewBox="0 0 520 520" role="img" aria-label="赛博炼丹炉">
+          <defs>
+            <radialGradient id="auraG" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#3ef0c0" stop-opacity=".34"/>
+              <stop offset="42%" stop-color="#1e8f97" stop-opacity=".12"/>
+              <stop offset="100%" stop-color="#04060c" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="rimG" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#4ef7ce"/>
+              <stop offset="48%" stop-color="#1b5d5a"/>
+              <stop offset="100%" stop-color="#f5c96b"/>
+            </linearGradient>
+            <linearGradient id="bodyG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#16221f"/>
+              <stop offset="38%" stop-color="#0b1413"/>
+              <stop offset="100%" stop-color="#050807"/>
+            </linearGradient>
+            <linearGradient id="goldG" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#6c5220"/>
+              <stop offset="22%" stop-color="#f5c96b"/>
+              <stop offset="55%" stop-color="#b3832f"/>
+              <stop offset="82%" stop-color="#ffe6a8"/>
+              <stop offset="100%" stop-color="#4a3513"/>
+            </linearGradient>
+            <radialGradient id="elixirG" cx="50%" cy="72%" r="72%">
+              <stop offset="0%" stop-color="#fff6d8"/>
+              <stop offset="26%" stop-color="#ffd27a"/>
+              <stop offset="52%" stop-color="#ff7d3c"/>
+              <stop offset="100%" stop-color="#4c1002"/>
+            </radialGradient>
+            <radialGradient id="orbG" cx="38%" cy="34%" r="70%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="30%" stop-color="#e9ffcf"/>
+              <stop offset="62%" stop-color="#6cf0b6"/>
+              <stop offset="100%" stop-color="#0f6b55" stop-opacity=".25"/>
+            </radialGradient>
+            <radialGradient id="heatG" cx="50%" cy="72%" r="66%">
+              <stop offset="0%" stop-color="#ff9a4d" stop-opacity=".55"/>
+              <stop offset="58%" stop-color="#ff5a2a" stop-opacity=".2"/>
+              <stop offset="100%" stop-color="#ff5a2a" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffdf9a" stop-opacity=".95"/>
+              <stop offset="45%" stop-color="#ff8a3d" stop-opacity=".45"/>
+              <stop offset="100%" stop-color="#ff5a2a" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="6" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%">
+              <feGaussianBlur stdDeviation="12" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="heatBlur" x="-20%" y="-40%" width="140%" height="200%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.012 0.05" numOctaves="2" seed="7" result="n">
+                <animate attributeName="baseFrequency" dur="9s" values="0.012 0.05;0.02 0.075;0.012 0.05" repeatCount="indefinite"/>
+              </feTurbulence>
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+            <clipPath id="bellyClip">
+              <path d="M304 306 L304 272 C304 246 282 232 260 232 C238 232 216 246 216 272 L216 306 Z"/>
+            </clipPath>
+            <path id="runePath" d="M260,262 m-206,0 a206,206 0 1,1 412,0 a206,206 0 1,1 -412,0"/>
+          </defs>
+
+          <!-- aura -->
+          <circle class="aura" cx="260" cy="268" r="248" fill="url(#auraG)"/>
+          <circle class="aura aura--b" cx="260" cy="268" r="196" fill="url(#auraG)"/>
+
+          <!-- rune rings -->
+          <g class="rings" aria-hidden="true">
+            <circle class="ring ring--outer" cx="260" cy="262" r="228"/>
+            <circle class="ring ring--dash" cx="260" cy="262" r="206"/>
+            <circle class="ring ring--mid" cx="260" cy="262" r="178"/>
+            <circle class="ring ring--inner" cx="260" cy="262" r="150"/>
+            <text class="ring-runes">
+              <textPath href="#runePath" startOffset="0%">乾 坤 坎 离 震 巽 艮 兑 乾 坤 坎 离 震 巽 艮 兑 玄 炉 炼 形 化 气 归 真 玄 炉 炼 形 化 气 归 真</textPath>
+            </text>
+            <g class="ticks" id="ticks"></g>
+          </g>
+
+          <!-- bagua -->
+          <g class="bagua" aria-hidden="true">
+            <text x="260" y="24" class="tri">☰</text>
+            <text x="430" y="94" class="tri">☱</text>
+            <text x="500" y="268" class="tri">☲</text>
+            <text x="430" y="432" class="tri">☳</text>
+            <text x="260" y="502" class="tri">☴</text>
+            <text x="90" y="432" class="tri">☵</text>
+            <text x="20" y="268" class="tri">☶</text>
+            <text x="90" y="94" class="tri">☷</text>
+          </g>
+
+          <!-- orbiting qi nodes -->
+          <g class="orbit orbit--1" aria-hidden="true"><circle cx="260" cy="34" r="3.4" class="node"/></g>
+          <g class="orbit orbit--2" aria-hidden="true"><circle cx="466" cy="262" r="2.4" class="node node--gold"/></g>
+          <g class="orbit orbit--3" aria-hidden="true"><circle cx="260" cy="486" r="2.8" class="node node--vio"/></g>
+
+          <!-- ===== cauldron ===== -->
+          <g class="cauldron">
+            <!-- warm aura -->
+            <ellipse class="warm-aura" cx="260" cy="320" rx="236" ry="196" fill="url(#coreGlow)" opacity="0"/>
+            <!-- ground glow -->
+            <ellipse class="ground" cx="260" cy="438" rx="152" ry="25" fill="url(#coreGlow)"/>
+
+            <!-- legs -->
+            <g class="legs" fill="url(#bodyG)" stroke="url(#rimG)" stroke-width="1.2">
+              <path d="M186 318 C174 350, 162 374, 146 392 L176 398 C194 380, 208 352, 214 326 Z"/>
+              <path d="M334 318 C346 350, 358 374, 374 392 L344 398 C326 380, 312 352, 306 326 Z"/>
+              <path d="M242 334 C238 362, 234 380, 230 400 L266 402 C268 380, 270 358, 272 334 Z"/>
+            </g>
+            <g class="feet" fill="#0a1211" stroke="url(#goldG)" stroke-width="1">
+              <ellipse cx="155" cy="396" rx="15" ry="4.6"/>
+              <ellipse cx="365" cy="396" rx="15" ry="4.6"/>
+              <ellipse cx="247" cy="401" rx="17" ry="4.6"/>
+            </g>
+
+            <!-- body -->
+            <path class="body" d="M174 196 C158 214, 151 242, 156 268 C162 302, 186 330, 214 340 C232 346, 288 346, 306 340 C334 330, 358 302, 364 268 C369 242, 362 214, 346 196 Z"
+                  fill="url(#bodyG)" stroke="url(#rimG)" stroke-width="1.5"/>
+            <path class="body-heat" d="M174 196 C158 214, 151 242, 156 268 C162 302, 186 330, 214 340 C232 346, 288 346, 306 340 C334 330, 358 302, 364 268 C369 242, 362 214, 346 196 Z" fill="url(#heatG)" opacity="0"/>
+            <path class="body-sheen" d="M182 210 C170 226, 166 248, 170 268 C175 294, 190 314, 208 326" fill="none" stroke="#7dffe0" stroke-width="1.1" opacity=".22"/>
+
+            <!-- engraved bands -->
+            <path class="band" d="M157 244 C195 260, 325 260, 363 244" fill="none" stroke="url(#goldG)" stroke-width="1.1" opacity=".7"/>
+            <path class="band" d="M162 292 C202 310, 318 310, 358 292" fill="none" stroke="url(#goldG)" stroke-width=".9" opacity=".48"/>
+
+            <!-- cyber circuit inlay -->
+            <g class="circuit" stroke="#5cffe0" stroke-width=".85" fill="none" opacity=".26">
+              <path d="M214 250 H190 L181 259 V273"/>
+              <path d="M306 250 H330 L339 259 V273"/>
+              <path d="M216 318 H192 L183 309"/>
+              <path d="M304 318 H328 L337 309"/>
+            </g>
+            <g fill="#9dffe8" opacity=".55">
+              <circle cx="181" cy="273" r="1.7"/><circle cx="339" cy="273" r="1.7"/>
+              <circle cx="183" cy="309" r="1.7"/><circle cx="337" cy="309" r="1.7"/>
+            </g>
+
+            <!-- belly window -->
+            <path d="M304 306 L304 272 C304 246 282 232 260 232 C238 232 216 246 216 272 L216 306 Z" fill="#090605" stroke="url(#goldG)" stroke-width="2"/>
+            <g clip-path="url(#bellyClip)">
+              <rect class="elixir" x="212" y="252" width="96" height="64" fill="url(#elixirG)" opacity=".92"/>
+              <rect class="elixir-wave" x="204" y="266" width="128" height="7" fill="#ffe9b0" opacity=".3"/>
+              <circle class="core" cx="260" cy="288" r="34" fill="url(#coreGlow)"/>
+              <circle class="orb" cx="260" cy="284" r="16" fill="url(#orbG)"/>
+              <circle class="orb-halo" cx="260" cy="284" r="23" fill="none" stroke="#baffd9" stroke-width="1" opacity=".55"/>
+              <circle class="orb-halo halo-2" cx="260" cy="284" r="29" fill="none" stroke="#ffd9a0" stroke-width=".7" opacity=".35"/>
+            </g>
+            <path d="M304 306 L304 272 C304 246 282 232 260 232 C238 232 216 246 216 272 L216 306 Z" fill="none" stroke="url(#goldG)" stroke-width="1.2"/>
+            <!-- rivets -->
+            <g fill="#f5c96b" opacity=".7">
+              <circle cx="218" cy="300" r="1.8"/><circle cx="302" cy="300" r="1.8"/>
+              <circle cx="260" cy="230" r="1.8"/>
+            </g>
+
+            <!-- engraved seal -->
+            <text class="seal-char" x="260" y="334" text-anchor="middle" font-family="Songti SC, STSong, serif" font-size="15" fill="#f5c96b" opacity=".34">丹</text>
+            <text class="shoulder-rune" x="192" y="222" text-anchor="middle" font-family="Songti SC, STSong, serif" font-size="9" fill="#8fe8d2" opacity=".35">坎</text>
+            <text class="shoulder-rune" x="328" y="222" text-anchor="middle" font-family="Songti SC, STSong, serif" font-size="9" fill="#8fe8d2" opacity=".35">离</text>
+
+            <!-- rim -->
+            <ellipse class="rim" cx="260" cy="196" rx="90" ry="16" fill="#0b1412" stroke="url(#goldG)" stroke-width="2.4"/>
+            <ellipse class="rim-in" cx="260" cy="196" rx="80" ry="11" fill="#050908" stroke="#2f6f61" stroke-width="1"/>
+            <ellipse class="rim-glow" cx="260" cy="196" rx="64" ry="7" fill="url(#coreGlow)" opacity=".5"/>
+            <path d="M176 190 C196 176, 324 176, 344 190" fill="none" stroke="#7dffe0" stroke-width=".8" opacity=".22"/>
+
+            <!-- mouth fire -->
+            <g class="mouth-fire" aria-hidden="true">
+              <ellipse cx="260" cy="194" rx="56" ry="6.5" fill="#ffb462" opacity=".55" filter="url(#glow)"/>
+            </g>
+
+            <!-- handles -->
+            <g class="handles" fill="none" stroke="url(#goldG)" stroke-width="3" stroke-linecap="round">
+              <path d="M172 198 C152 192, 140 206, 143 222 C146 238, 158 246, 172 244"/>
+              <path d="M348 198 C368 192, 380 206, 377 222 C374 238, 362 246, 348 244"/>
+            </g>
+            <circle cx="173" cy="197" r="2.4" fill="#f5c96b" opacity=".8"/>
+            <circle cx="347" cy="197" r="2.4" fill="#f5c96b" opacity=".8"/>
+
+            <!-- lid brim -->
+            <path d="M182 189 C204 181, 316 181, 338 189 L336 198 C314 205, 206 205, 184 198 Z"
+                  fill="#0c1513" stroke="url(#goldG)" stroke-width="1.4"/>
+
+            <!-- lid -->
+            <g class="lid">
+              <path d="M188 190 C194 164, 228 150, 260 150 C292 150, 326 164, 332 190 Z" fill="url(#bodyG)" stroke="url(#goldG)" stroke-width="1.6"/>
+              <path d="M198 178 C210 163, 234 155, 260 155 C286 155, 310 163, 322 178" fill="none" stroke="#4b8f7f" stroke-width=".85" opacity=".5"/>
+              <path d="M206 176 L216 170 M314 176 L304 170" stroke="#f5c96b" stroke-width=".8" opacity=".35"/>
+              <ellipse cx="260" cy="190" rx="72" ry="7" fill="#050908" stroke="url(#goldG)" stroke-width="1.2" opacity=".95"/>
+              <circle cx="260" cy="144" r="6" fill="#0b1412" stroke="url(#goldG)" stroke-width="1.6"/>
+              <path d="M260 138 L260 127" stroke="url(#goldG)" stroke-width="1.6" stroke-linecap="round"/>
+              <circle cx="260" cy="122" r="3" fill="#8ef7d6" filter="url(#glow)"/>
+            </g>
+
+            <!-- lid seam glow -->
+            <ellipse class="seam" cx="260" cy="192" rx="70" ry="5.5" fill="#ffd08a" opacity="0" filter="url(#glow)"/>
+          </g>
+        </svg>
+
+        <canvas class="fx fx--front" id="fx-front" aria-hidden="true"></canvas>
+
+        <!-- talismans -->
+        <div class="talisman t1" aria-hidden="true"><span>聚</span></div>
+        <div class="talisman t2" aria-hidden="true"><span>炼</span></div>
+        <div class="talisman t3" aria-hidden="true"><span>化</span></div>
+        <div class="talisman t4" aria-hidden="true"><span>成</span></div>
+
+        <!-- progress arc -->
+        <svg class="progress-arc" viewBox="0 0 520 520" aria-hidden="true">
+          <circle class="pa-track" cx="260" cy="262" r="243"/>
+          <circle class="pa-fill" id="pa-fill" cx="260" cy="262" r="243"/>
+        </svg>
+
+        <div class="hud-chip hud-chip--bl" data-side="bl">
+          <span class="hud-chip__k">火候 · LR</span>
+          <span class="hud-chip__v"><b id="v-lr">1e-4</b><i>adamw8bit</i></span>
+          <span class="hud-chip__bar"><i id="b-lr"></i></span>
+        </div>
+        <div class="hud-chip hud-chip--br" data-side="br">
+          <span class="hud-chip__k">凝丹 · PROGRESS</span>
+          <span class="hud-chip__v"><b id="v-prog">0</b><i>%</i></span>
+          <span class="hud-chip__bar"><i id="b-prog"></i></span>
+        </div>
+      </div>
+
+      <div class="stage-bottom">
+        <div class="loss-card">
+          <div class="loss-card__head">
+            <span>丹纹 · LOSS</span>
+            <span class="loss-card__val"><b id="v-loss">—</b><i>step <em id="v-step">0</em>/<em id="v-total">2400</em></i></span>
+          </div>
+          <canvas id="loss-chart" width="620" height="96"></canvas>
+        </div>
+
+        <div class="actions">
+          <div class="actions__meta">
+            <span class="actions__hint" id="action-hint">投材 → 开炉</span>
+            <span class="actions__speed">
+              <button class="chip-btn" data-speed="1">1×</button>
+              <button class="chip-btn is-on" data-speed="4">4×</button>
+              <button class="chip-btn" data-speed="12">12×</button>
+            </span>
+          </div>
+          <div class="actions__row">
+            <button class="btn btn--ghost" id="btn-reset" title="撤炉重来">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4v4.5h4.5"/></svg>
+              撤炉
+            </button>
+            <button class="btn btn--ignite" id="btn-ignite">
+              <span class="btn__frame" aria-hidden="true"></span>
+              <span class="btn__text"><b id="btn-ignite-label">开炉</b><i>IGNITE</i></span>
+            </button>
+            <button class="btn btn--ghost" id="btn-trial" title="试炼：小周天试跑">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 19 19 5M5 5h6M19 19v-6"/></svg>
+              试炼
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="ticker" id="ticker" aria-live="polite">
+        <span class="ticker__tag">天机录</span>
+        <span class="ticker__line" id="ticker-line">炉已温养 · 灵材未投 · 等待丹主开炉</span>
+      </div>
+    </section>
+
+    <!-- ---------- OTHER VIEWS (rendered by app.js) ---------- -->
+    <section class="view view--scroll" id="view-codex" hidden></section>
+    <section class="view view--scroll" id="view-recipes" hidden></section>
+    <section class="view view--scroll" id="view-materials" hidden></section>
+    <section class="view view--scroll" id="view-methods" hidden></section>
+    <section class="view view--scroll" id="view-market" hidden></section>
+    <section class="view view--scroll" id="view-logs" hidden></section>
+  </main>
+
+  <!-- ======================= RIGHT PANEL ======================= -->
+  <aside class="panel" id="panel" aria-label="丹方配置">
+    <div class="panel__head">
+      <div>
+        <span class="eyebrow">RECIPE / 丹方</span>
+        <h2>一炉之机</h2>
+      </div>
+      <button class="icon-btn" id="btn-collapse" title="收起丹方">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+    </div>
+
+    <div class="panel__scroll">
+      <!-- base model -->
+      <section class="field">
+        <label class="field__label">炉鼎 <i>BASE MODEL</i></label>
+        <button class="picker" id="model-picker" aria-haspopup="listbox">
+          <span class="picker__sigil" id="pick-modality">图</span>
+          <span class="picker__text">
+            <b id="pick-name">FLUX.3 Image Klein Base</b>
+            <i id="pick-meta">Black Forest Labs · 可训 LoRA · 24G</i>
+          </span>
+          <svg class="picker__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="picker-pop" id="picker-pop" hidden>
+          <div class="picker-pop__search"><input id="model-search" placeholder="搜索炉鼎 / 模型…" /></div>
+          <div class="picker-pop__tabs" id="picker-tabs">
+            <button data-mod="all" class="is-on">全部</button>
+            <button data-mod="image">图像</button>
+            <button data-mod="video">视频</button>
+            <button data-mod="audio">音频</button>
+            <button data-mod="llm">语言</button>
+          </div>
+          <div class="picker-pop__list" id="picker-list" role="listbox"></div>
+        </div>
+      </section>
+
+      <!-- dataset -->
+      <section class="field">
+        <label class="field__label">灵材 <i>DATASET</i></label>
+        <div class="dataset-card">
+          <div class="dataset-card__count"><b id="ds-count">24</b><span>张 /段</span></div>
+          <div class="dataset-card__meta">
+            <span id="ds-res">1024px · 分桶</span>
+            <span id="ds-trigger">触发词：<b>xu_style</b></span>
+          </div>
+          <button class="mini-btn" data-nav="materials">管理灵材</button>
+        </div>
+        <div class="field__note" id="ds-note">建议 20–50 张主体清晰、去重、多角度的素材。</div>
+      </section>
+
+      <!-- hyperparams -->
+      <section class="field">
+        <label class="field__label">火候 <i>HYPERPARAMETERS</i></label>
+
+        <div class="slider" data-key="rank">
+          <div class="slider__top"><span>灵阶 <i>RANK</i></span><output data-out="rank">32</output></div>
+          <input type="range" min="4" max="128" step="4" value="32" id="in-rank" />
+          <div class="slider__hint">越高越能记住细节，也越容易过拟合</div>
+        </div>
+
+        <div class="slider" data-key="alpha">
+          <div class="slider__top"><span>灵韵 <i>ALPHA</i></span><output data-out="alpha">32</output></div>
+          <input type="range" min="1" max="128" step="1" value="32" id="in-alpha" />
+        </div>
+
+        <div class="slider" data-key="lr">
+          <div class="slider__top"><span>火候 <i>LEARNING RATE</i></span><output data-out="lr">1.0e-4</output></div>
+          <input type="range" min="0" max="100" step="1" value="56" id="in-lr" />
+        </div>
+
+        <div class="slider" data-key="steps">
+          <div class="slider__top"><span>周天 <i>STEPS</i></span><output data-out="steps">2400</output></div>
+          <input type="range" min="200" max="8000" step="100" value="2400" id="in-steps" />
+        </div>
+
+        <div class="slider" data-key="batch">
+          <div class="slider__top"><span>鼎炉 <i>BATCH</i></span><output data-out="batch">1</output></div>
+          <input type="range" min="1" max="8" step="1" value="1" id="in-batch" />
+        </div>
+      </section>
+
+      <section class="estimate" id="estimate">
+        <div class="estimate__row"><span>预计显存</span><b id="est-vram">17.4 G</b></div>
+        <div class="estimate__row"><span>预计耗时</span><b id="est-time">48 分钟</b></div>
+        <div class="estimate__row"><span>丹纹体积</span><b id="est-size">172 MB</b></div>
+        <div class="estimate__bar"><i id="est-bar"></i></div>
+        <div class="estimate__note" id="est-note">以 24G 显卡、单卡估算；实际以训练器为准。</div>
+      </section>
+
+      <section class="field">
+        <label class="field__label">心法 <i>TECHNIQUE</i></label>
+        <div class="seg" id="technique-seg">
+          <button class="is-on" data-tech="LoRA">LoRA</button>
+          <button data-tech="LoHa">LoHa</button>
+          <button data-tech="LoKr">LoKr</button>
+          <button data-tech="DoRA">DoRA</button>
+          <button data-tech="PiSSA">PiSSA</button>
+        </div>
+      </section>
+
+      <section class="field">
+        <label class="field__label">禁制 <i>ADVANCED</i></label>
+        <div class="switches">
+          <label class="switch"><input type="checkbox" checked id="sw-fp8"><i></i><span>FP8 基座<em>省一半显存</em></span></label>
+          <label class="switch"><input type="checkbox" checked id="sw-ckpt"><i></i><span>梯度检查点<em>降显存，略慢</em></span></label>
+          <label class="switch"><input type="checkbox" id="sw-blockswap"><i></i><span>换块卸载<em>低显存续命</em></span></label>
+          <label class="switch"><input type="checkbox" checked id="sw-sample"><i></i><span>丹成留影<em>训练中出样图</em></span></label>
+        </div>
+      </section>
+
+    </div>
+  </aside>
+
+  <!-- ======================= STATUS BAR ======================= -->
+  <footer class="statusbar">
+    <span class="statusbar__left"><i class="dot dot--jade"></i><span id="status-left">丹房就绪 · 炉温 36°C</span></span>
+    <span class="statusbar__hints">
+      <kbd>空格</kbd> 开炉/停火 <kbd>1–7</kbd> 切换 <kbd>Esc</kbd> 关闭
+    </span>
+    <span class="statusbar__right">原型 v0.1 · 数据截至 2026-10 · 仅供设计演示</span>
+  </footer>
+</div>
+
+<!-- ======================= MODAL: 丹成 ======================= -->
+<div class="modal" id="modal-done" hidden>
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="done-title">
+    <button class="modal__close" data-close aria-label="关闭">×</button>
+    <div class="modal__burst" aria-hidden="true"></div>
+    <span class="modal__seal">丹成</span>
+    <span class="eyebrow">ELIXIR FORGED</span>
+    <h2 id="done-title">一炉已毕，丹纹自成</h2>
+    <p class="modal__sub" id="done-sub">FLUX.3 Image Klein Base · xu_style · rank 32</p>
+
+    <div class="lora-card" id="lora-card">
+      <div class="lora-card__glow"></div>
+      <div class="lora-card__top">
+        <span class="lora-card__badge" id="lora-badge">IMAGE LORA</span>
+        <span class="lora-card__file" id="lora-file">xu_style_flux3_klein_r32.safetensors</span>
+      </div>
+      <div class="lora-card__art" aria-hidden="true">
+        <div class="art art--a"></div><div class="art art--b"></div><div class="art art--c"></div>
+      </div>
+      <div class="lora-card__stats">
+        <div><i>RANK</i><b id="lora-rank">32</b></div>
+        <div><i>SIZE</i><b id="lora-size">172 MB</b></div>
+        <div><i>STEPS</i><b id="lora-steps">2400</b></div>
+        <div><i>LOSS</i><b id="lora-loss">0.042</b></div>
+      </div>
+    </div>
+
+    <div class="modal__actions">
+      <button class="btn btn--ghost" data-close>收入丹房</button>
+      <button class="btn btn--ignite btn--sm" id="btn-again"><span class="btn__text"><b>再炼一炉</b><i>AGAIN</i></span></button>
+    </div>
+    <p class="modal__fine">原型演示：未真正生成权重文件。真实训练请见「功法」页的工具链。</p>
+  </div>
+</div>
+
+<!-- ======================= HELP ======================= -->
+<div class="modal" id="modal-help" hidden>
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__card modal__card--help" role="dialog" aria-modal="true">
+    <button class="modal__close" data-close aria-label="关闭">×</button>
+    <span class="eyebrow">GUIDE / 观炉须知</span>
+    <h2>这是一座原型炉</h2>
+    <ul class="help-list">
+      <li><b>开炉</b>：启动一次完整的模拟训练，炉火会从文火转到武火，最后结丹。</li>
+      <li><b>试炼</b>：小周天快跑，约十几秒演示全过程。</li>
+      <li><b>丹方</b>：右侧可换炉鼎（模型族）、改灵阶/火候/周天，预计显存与耗时实时重算。</li>
+      <li><b>模型谱 / 丹方 / 功法 / 丹市</b>：本次调研的真实资料库，含官方文档与社区平台信息。</li>
+      <li><b>灵材</b>：可真实拖入本地图片，仅在本机浏览器预览，不上传。</li>
+      <li><b>键盘</b>：空格开炉/停火，1–7 切换页面，Esc 关闭弹层。</li>
+      <li><b>炉音</b>：右上角喇叭可开关。炉膛轰鸣、木炭爆裂、丹液沸腾、风箱与结丹铜钟都是实时合成的。</li>
+    </ul>
+    <div class="sound-ctl">
+      <span class="sound-ctl__label">炉音音量 <i>VOLUME</i></span>
+      <input type="range" id="vol" min="0" max="100" step="1" value="85" />
+      <output id="vol-out">85</output>
+      <button class="mini-btn" id="sound-demo">试听点火</button>
+    </div>
+    <div class="modal__actions"><button class="btn btn--ghost" data-close>知道了</button></div>
+  </div>
+</div>
+
+<script defer src="js/data.js"></script>
+<script defer src="js/sound.js"></script>
+<script defer src="js/furnace.js"></script>
+<script defer src="js/train.js"></script>
+<script defer src="js/app.js"></script>
+</body>
+</html>

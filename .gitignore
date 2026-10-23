@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# build output
+dist/
+desktop/macos/.build/
+desktop/macos/AppIcon.icns
+*.dmg
+*.zip
+
+# dependencies / caches
+node_modules/
+__pycache__/
+.venv/
+*.log
+
+# editors
+.vscode/
+.idea/
+*.swp

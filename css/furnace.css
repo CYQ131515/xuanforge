@@ -1,0 +1,169 @@
+/* ============================================================
+   玄炉 XUANFORGE · furnace.css
+   The cyber-cauldron: rings, runes, heat states, ignition
+   ============================================================ */
+
+/* ---------- rings & runes ---------- */
+.rings{transform-origin:260px 262px}
+.ring{fill:none;stroke-linecap:round}
+.ring--outer{stroke:rgba(62,240,192,.28);stroke-width:1;stroke-dasharray:1 9;
+  animation:spin 120s linear infinite;transform-origin:260px 262px}
+.ring--dash{stroke:rgba(139,124,255,.28);stroke-width:1;stroke-dasharray:2 14;
+  animation:spinRev 78s linear infinite;transform-origin:260px 262px}
+.ring--mid{stroke:rgba(245,201,107,.22);stroke-width:.9;stroke-dasharray:24 8 4 8;
+  animation:spin 54s linear infinite;transform-origin:260px 262px}
+.ring--inner{stroke:rgba(98,255,224,.16);stroke-width:.8;
+  animation:spinRev 36s linear infinite;transform-origin:260px 262px}
+.ring-runes{
+  fill:rgba(140,240,215,.34);font-family:var(--font-display);
+  font-size:10.5px;letter-spacing:.55em;
+  animation:spin 160s linear infinite;transform-origin:260px 262px;
+}
+.ticks line{stroke:rgba(120,220,196,.25);stroke-width:1}
+.ticks line.major{stroke:rgba(245,201,107,.42);stroke-width:1.4}
+
+.bagua{animation:spinRev 200s linear infinite;transform-origin:260px 262px}
+.bagua .tri{fill:rgba(160,245,220,.3);font-size:19px;text-anchor:middle;dominant-baseline:middle;font-family:var(--font-display)}
+
+.orbit{transform-origin:260px 262px}
+.orbit--1{animation:spin 26s linear infinite}
+.orbit--2{animation:spinRev 34s linear infinite}
+.orbit--3{animation:spin 46s linear infinite}
+.node{fill:#8bffe0;filter:drop-shadow(0 0 6px #3ef0c0)}
+.node--gold{fill:#ffe0a0;filter:drop-shadow(0 0 6px #f5c96b)}
+.node--vio{fill:#c3b4ff;filter:drop-shadow(0 0 6px #8b7cff)}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spinRev{to{transform:rotate(-360deg)}}
+
+/* hotter rings when burning */
+body[data-state="burning"] .aura{opacity:calc(.3 + var(--heat) * .25)}
+body[data-state="burning"] .ring--outer{stroke:rgba(255,180,110,.4);animation-duration:26s}
+body[data-state="burning"] .ring--dash{stroke:rgba(255,120,80,.34);animation-duration:18s}
+body[data-state="burning"] .ring--mid{stroke:rgba(255,214,140,.4);animation-duration:12s}
+body[data-state="burning"] .ring--inner{stroke:rgba(255,235,190,.3);animation-duration:9s}
+body[data-state="burning"] .ring-runes{fill:rgba(255,228,180,.5)}
+body[data-state="burning"] .bagua .tri{fill:rgba(255,225,170,.5)}
+body[data-state="burning"] .orbit--1{animation-duration:9s}
+body[data-state="burning"] .orbit--2{animation-duration:11s}
+body[data-state="burning"] .orbit--3{animation-duration:13s}
+body[data-state="done"] .ring--outer,
+body[data-state="done"] .ring--dash,
+body[data-state="done"] .ring--mid,
+body[data-state="done"] .ring--inner{stroke:rgba(245,201,107,.5)}
+body[data-state="done"] .ring-runes{fill:rgba(255,235,180,.6)}
+
+/* ---------- cauldron ---------- */
+.aura{opacity:calc(.5 + var(--heat) * .6);transition:opacity .6s}
+.aura--b{opacity:calc(.32 + var(--heat) * .55)}
+.cauldron{transition:transform .6s var(--ease);transform-origin:260px 330px;
+  transform:translateY(calc(var(--heat) * -3px)) scale(1.05)}
+.body{filter:drop-shadow(0 6px 18px rgba(0,0,0,.7))}
+.warm-aura{opacity:calc(var(--heat) * .62);transition:opacity .6s}
+.body-heat{opacity:calc(var(--heat) * .34);transition:opacity .6s;mix-blend-mode:screen}
+.body-sheen{opacity:calc(.12 + var(--heat) * .28)}
+.band{opacity:calc(.4 + var(--heat) * .5)}
+.rim{filter:drop-shadow(0 2px 8px rgba(0,0,0,.6))}
+.rim-glow{opacity:calc(.18 + var(--heat) * .75)}
+.mouth-fire{opacity:calc(var(--heat) * .9);transition:opacity .5s}
+.mouth-fire ellipse{filter:url(#glow)}
+.handles{transition:filter .4s}
+body[data-state="burning"] .handles{filter:drop-shadow(0 0 6px rgba(245,201,107,.7))}
+
+/* lid lifts as heat rises */
+.lid{transform-origin:260px 190px;transform:translateY(calc(var(--heat) * -13px)) rotate(calc(var(--heat) * -1.2deg));transition:transform .6s var(--ease)}
+.seam{opacity:calc(var(--heat) * .8);transition:opacity .5s}
+
+/* core / orb */
+.elixir{transform-origin:260px 300px;animation:elixirWave 5s ease-in-out infinite;
+  filter:drop-shadow(0 0 14px rgba(255,140,40,.55))}
+@keyframes elixirWave{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-3px) scaleY(1.05)}}
+.core{opacity:calc(.4 + var(--heat) * .8);transition:opacity .5s;
+  animation:corePulse 3.2s ease-in-out infinite;transform-origin:260px 282px}
+.orb{transform-origin:260px 278px;
+  animation:orbBreath 3.6s ease-in-out infinite;
+  filter:drop-shadow(0 0 10px rgba(190,255,220,.8))}
+.orb-halo{animation:haloRing 6s linear infinite;transform-origin:260px 278px}
+@keyframes orbBreath{0%,100%{transform:scale(.92);opacity:.9}50%{transform:scale(1.08);opacity:1}}
+@keyframes corePulse{0%,100%{opacity:calc(.35 + var(--heat) * .7)}50%{opacity:calc(.55 + var(--heat) * .9)}}
+@keyframes haloRing{0%{transform:rotate(0) scale(1);opacity:.5}50%{transform:rotate(180deg) scale(1.18);opacity:.2}100%{transform:rotate(360deg) scale(1);opacity:.5}}
+
+body[data-state="burning"] .orb{animation:orbBurn .9s ease-in-out infinite}
+@keyframes orbBurn{0%,100%{transform:scale(1.02) translateY(0);opacity:1}50%{transform:scale(1.22) translateY(-2px);opacity:1}}
+body[data-state="burning"] .core{animation:coreBurn .6s ease-in-out infinite}
+@keyframes coreBurn{0%,100%{opacity:.85;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+body[data-state="burning"] .elixir{animation-duration:1.6s;filter:drop-shadow(0 0 26px rgba(255,120,40,.9))}
+body[data-state="burning"] .ground{opacity:.9}
+body[data-state="burning"] .scene__halo{background:radial-gradient(circle,rgba(255,150,80,.16),rgba(255,110,60,.04) 55%,transparent 72%)}
+body[data-state="burning"] .furnace{filter:drop-shadow(0 30px 60px rgba(0,0,0,.65)) drop-shadow(0 0 44px rgba(255,150,70,.22))}
+
+/* done state: golden elixir */
+body[data-state="done"] .orb{filter:drop-shadow(0 0 26px rgba(255,225,150,1))}
+body[data-state="done"] .aura{opacity:1;background:radial-gradient(circle,rgba(255,214,140,.3),transparent 65%)}
+body[data-state="done"] .ground{opacity:1}
+body[data-state="done"] .seam{opacity:1}
+body[data-state="done"] .furnace{animation:doneFloat 5s ease-in-out infinite}
+@keyframes doneFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+.ground{opacity:calc(.15 + var(--heat) * .55);transition:opacity .6s}
+.scene__halo{transition:background .8s}
+
+/* ---------- stage effects ---------- */
+.scene::before{ /* vignette + scanlines */
+  content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
+  background:
+    repeating-linear-gradient(to bottom,rgba(255,255,255,.018) 0 1px,transparent 1px 4px),
+    radial-gradient(ellipse 60% 55% at 50% 48%,transparent 40%,rgba(3,5,10,.55) 100%);
+  opacity:.7;
+}
+.scene::after{ /* ignition flash */
+  content:"";position:absolute;inset:8%;z-index:6;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,222,160,.55),rgba(255,120,60,.18) 42%,transparent 68%);
+  opacity:0;transform:scale(.7);
+}
+body[data-flash="1"] .scene::after{animation:igniteFlash 1s var(--ease)}
+@keyframes igniteFlash{
+  0%{opacity:0;transform:scale(.6)}
+  22%{opacity:.95;transform:scale(1.02)}
+  100%{opacity:0;transform:scale(1.35)}
+}
+
+/* heat wobble on cauldron while burning */
+body[data-state="burning"] .cauldron{animation:heatWobble 3.4s ease-in-out infinite}
+@keyframes heatWobble{
+  0%,100%{transform:translateY(calc(var(--heat) * -3px)) rotate(0) scale(1.05)}
+  33%{transform:translateY(calc(var(--heat) * -4.5px)) rotate(.18deg) scale(1.05)}
+  66%{transform:translateY(calc(var(--heat) * -2px)) rotate(-.16deg) scale(1.05)}
+}
+
+/* speed lines on the ring while burning */
+body[data-state="burning"] .ring--dash{filter:drop-shadow(0 0 4px rgba(255,170,100,.5))}
+
+/* talismans flare when burning */
+body[data-state="burning"] .talisman{
+  border-color:rgba(255,190,110,.7);
+  box-shadow:0 0 28px -4px rgba(255,160,80,.7),inset 0 0 14px rgba(255,170,90,.22);
+  animation-duration:2.4s;
+}
+body[data-state="burning"] .talisman span{color:#ffe1a8;text-shadow:0 0 12px rgba(255,190,110,.9)}
+
+/* progress arc glow while burning */
+body[data-state="burning"] .pa-fill{filter:drop-shadow(0 0 8px rgba(255,200,120,.8))}
+
+/* phase text when burning */
+body[data-state="burning"] .phase__main{
+  background:linear-gradient(100deg,#fff,#ffe0b0 40%,#ffb066 75%,#ff6b4a);
+  -webkit-background-clip:text;background-clip:text;
+  filter:drop-shadow(0 0 20px rgba(255,150,80,.3));
+}
+body[data-state="done"] .phase__main{
+  background:linear-gradient(100deg,#fff,#ffe9b0 35%,#f5c96b 70%,#8bffe0);
+  -webkit-background-clip:text;background-clip:text;
+  filter:drop-shadow(0 0 24px rgba(245,201,107,.4));
+}
+
+/* small screen: hide rune ring text overflow */
+@media (max-width:600px){
+  .ring-runes{font-size:9px;letter-spacing:.5em}
+  .bagua .tri{font-size:15px}
+}

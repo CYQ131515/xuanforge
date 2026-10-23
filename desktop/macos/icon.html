@@ -1,0 +1,86 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+  html,body{margin:0;width:1024px;height:1024px;overflow:hidden;background:transparent}
+  .icon{position:relative;width:1024px;height:1024px;border-radius:224px;
+    background:
+      radial-gradient(60% 55% at 50% 42%, rgba(62,240,192,.20), transparent 62%),
+      radial-gradient(70% 60% at 50% 88%, rgba(245,201,107,.14), transparent 65%),
+      linear-gradient(160deg,#0b1520 0%,#05080d 55%,#070b12 100%);
+    box-shadow: inset 0 0 0 2px rgba(120,240,210,.14), inset 0 40px 120px rgba(62,240,192,.06);
+    overflow:hidden;
+  }
+  .icon:after{content:"";position:absolute;inset:0;border-radius:224px;
+    background:repeating-linear-gradient(to bottom,rgba(255,255,255,.026) 0 2px,transparent 2px 6px);
+    mix-blend-mode:overlay}
+  svg{position:absolute;inset:0;width:1024px;height:1024px}
+</style></head><body>
+<div class="icon">
+<svg viewBox="0 0 1024 1024" fill="none">
+  <defs>
+    <linearGradient id="jade" x1="200" y1="150" x2="820" y2="880">
+      <stop stop-color="#9bffe4"/><stop offset=".45" stop-color="#3ef0c0"/><stop offset="1" stop-color="#0f8f74"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="300" y1="300" x2="720" y2="790">
+      <stop stop-color="#ffd98f"/><stop offset=".42" stop-color="#e8b45f"/><stop offset="1" stop-color="#8a5c1e"/>
+    </linearGradient>
+    <radialGradient id="orb" cx="38%" cy="32%" r="72%">
+      <stop stop-color="#ffffff"/><stop offset=".3" stop-color="#eaffd0"/><stop offset=".66" stop-color="#6cf0b6"/><stop offset="1" stop-color="#0c5c4a"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop stop-color="#ffb45a" stop-opacity=".75"/><stop offset=".55" stop-color="#ff7a3c" stop-opacity=".28"/><stop offset="1" stop-color="#ff5a2a" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="26"/></filter>
+    <filter id="soft"><feGaussianBlur stdDeviation="7"/></filter>
+  </defs>
+
+  <!-- outer rings -->
+  <circle cx="512" cy="512" r="392" stroke="url(#jade)" stroke-width="3" opacity=".55"/>
+  <circle cx="512" cy="512" r="352" stroke="#3ef0c0" stroke-width="2" stroke-dasharray="4 18" opacity=".35"/>
+  <circle cx="512" cy="512" r="318" stroke="url(#gold)" stroke-width="2" stroke-dasharray="48 14 6 14" opacity=".4"/>
+  <circle cx="512" cy="512" r="286" stroke="#3ef0c0" stroke-width="1.6" opacity=".22"/>
+
+  <!-- ambient glow -->
+  <ellipse cx="512" cy="600" rx="270" ry="220" fill="url(#glow)" opacity=".55" filter="url(#blur)"/>
+
+  <!-- legs -->
+  <g stroke="url(#gold)" stroke-width="7" stroke-linejoin="round" fill="#0a1412">
+    <path d="M392 700 C368 770 336 820 296 858 L368 874 C412 830 444 772 458 712 Z"/>
+    <path d="M632 700 C656 770 688 820 728 858 L656 874 C612 830 580 772 566 712 Z"/>
+    <path d="M494 726 C486 786 478 826 470 868 L554 872 C558 828 562 780 566 726 Z"/>
+  </g>
+
+  <!-- body -->
+  <path d="M356 430 C318 474 304 534 314 592 C328 668 384 730 448 752 C488 766 536 766 576 752 C640 730 696 668 710 592 C720 534 706 474 668 430 Z"
+        fill="#0c1715" stroke="url(#gold)" stroke-width="9"/>
+  <path d="M376 458 C348 494 338 546 346 590 C356 650 392 700 438 726" stroke="#7dffe0" stroke-width="4" opacity=".28" fill="none"/>
+
+  <!-- bands -->
+  <path d="M330 540 C410 576 614 576 694 540" stroke="url(#gold)" stroke-width="5" opacity=".7" fill="none"/>
+  <path d="M348 646 C420 682 604 682 676 646" stroke="url(#gold)" stroke-width="4" opacity=".45" fill="none"/>
+
+  <!-- window -->
+  <ellipse cx="512" cy="434" rx="150" ry="12" fill="#ffd08a" opacity=".65" filter="url(#soft)"/>
+  <path d="M420 690 L420 618 C420 566 466 538 512 538 C558 538 604 566 604 618 L604 690 Z" fill="#160a03" stroke="url(#gold)" stroke-width="8"/>
+  <circle cx="512" cy="642" r="86" fill="url(#glow)" filter="url(#soft)"/>
+  <circle cx="512" cy="632" r="42" fill="url(#orb)"/>
+  <circle cx="512" cy="632" r="58" stroke="#baffd9" stroke-width="3" opacity=".45" fill="none"/>
+
+  <!-- rim + lid -->
+  <ellipse cx="512" cy="430" rx="176" ry="34" fill="#0a1412" stroke="url(#gold)" stroke-width="8"/>
+  <ellipse cx="512" cy="430" rx="150" ry="24" fill="#050a08" stroke="#2f8f79" stroke-width="3"/>
+  <path d="M374 416 C398 372 452 350 512 350 C572 350 626 372 650 416 Z" fill="#0b1413" stroke="url(#gold)" stroke-width="7"/>
+  <circle cx="512" cy="338" r="14" fill="#0a1412" stroke="url(#gold)" stroke-width="6"/>
+  <circle cx="512" cy="308" r="8" fill="#8ef7d6"/>
+
+  <!-- handles -->
+  <path d="M340 438 C296 424 268 456 276 494 C282 528 308 544 336 540" stroke="url(#gold)" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <path d="M684 438 C728 424 756 456 748 494 C742 528 716 544 688 540" stroke="url(#gold)" stroke-width="10" stroke-linecap="round" fill="none"/>
+
+  <!-- trigram accents -->
+  <g fill="#8fe8d2" opacity=".5" font-family="PingFang SC" font-size="44" text-anchor="middle">
+    <text x="512" y="146">☰</text>
+    <text x="512" y="916">☷</text>
+  </g>
+</svg>
+</div>
+</body></html>

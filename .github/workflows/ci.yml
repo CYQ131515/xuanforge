@@ -1,0 +1,39 @@
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: JS syntax
+        run: |
+          for f in js/*.js tools/*.js; do
+            node --check "$f"
+          done
+
+      - name: Repository self-check
+        run: node tools/check.js
+
+      - name: Build script syntax
+        run: bash -n desktop/macos/build.sh
+
+      - name: Verify required files
+        run: |
+          test -f index.html
+          test -f desktop/macos/main.swift
+          test -f docs/LoRA生态调查-2026.md
