@@ -94,7 +94,7 @@ CI runs JS syntax checks, the repository self-check and `bash -n desktop/macos/b
 
 ## License
 
-Code and original content are released under the **MIT License**. Model names and trademarks (FLUX, Qwen, Wan, Krea, Anima, ACE-Step, GPT-SoVITS, Civitai, LiblibAI, etc.) belong to their owners and are used only for factual comparison. The research snapshot is a point-in-time summary — always check the official model cards and licenses.
+Code and original content are released under the **MIT License**. Model names and trademarks (FLUX, Qwen, Wan, Krea, Anima, ACE-Step, GPT-SoVITS, Civitai, LiblibAI, etc.) belong to their owners and are used only for factual comparison — see [NOTICE.md](NOTICE.md). The research snapshot is a point-in-time summary — always check the official model cards and licenses.
 
 ## Sources
 

@@ -211,7 +211,7 @@ macOS 版已经完成，见 [desktop/README.md](desktop/README.md)。`desktop/ma
 
 ## 开源
 
-- **许可**：[MIT](LICENSE)。模型名称与第三方资料归各自所有者，仓库内仅作事实性对比。
+- **许可**：[MIT](LICENSE)。模型名称与第三方资料归各自所有者，仓库内仅作事实性对比，详见 [NOTICE.md](NOTICE.md)。
 - **在线预览**：<https://cyq131515.github.io/xuanforge/>
 - **仓库**：<https://github.com/CYQ131515/xuanforge>
 - **贡献**：见 [CONTRIBUTING.md](CONTRIBUTING.md)；数据更新后跑 `node tools/check.js`。

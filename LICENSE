@@ -19,13 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-Note / 说明:
-
-- 本仓库中的模型名称、公司名称与产品名称（FLUX、Qwen、Wan、Krea、Anima、
-  ACE-Step、GPT-SoVITS、Civitai、LiblibAI 等）归各自所有者所有，仅用于
-  事实性描述与选型对比，不构成任何官方关联或背书。
-- 仓库内的调研数据（rank / LR / 显存等）来自公开的官方文档与社区资料；
-  使用时请以对应官方文档与模型许可为准。
