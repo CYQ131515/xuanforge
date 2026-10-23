@@ -4,6 +4,7 @@
 [![macOS 12+](https://img.shields.io/badge/macOS-12%2B-f5c96b.svg)](desktop/README.md)
 [![No dependencies](https://img.shields.io/badge/dependencies-zero-8b7cff.svg)](#这是什么)
 [![Live demo](https://img.shields.io/badge/demo-GitHub%20Pages-3ef0c0.svg)](https://cyq131515.github.io/xuanforge/)
+[![Download macOS](https://img.shields.io/badge/download-macOS%20app-f5c96b.svg)](https://github.com/CYQ131515/xuanforge/releases/latest)
 
 > 「一炉一气，炼万千形态。」
 > 把图像、视频、音频、语言的 LoRA 训练，做成一座可以观火、候丹、留影的赛博炼丹炉。
@@ -28,7 +29,7 @@
 
 ![玄炉桌面版](screenshots/10-desktop.jpg)
 
-- 构建：`bash desktop/macos/build.sh` → `dist/玄炉.app` + `dist/玄炉-macOS.zip`
+- 构建：`bash desktop/macos/build.sh` → `dist/玄炉.app` + `dist/XuanForge-macOS.zip`
 - 运行：`open dist/玄炉.app`，或解压 ZIP 后拖进「应用程序」
 - 构建产物不入库；详细说明见 [desktop/README.md](desktop/README.md)
 
@@ -191,7 +192,7 @@ xuanforge/
 
 ## 桌面端
 
-macOS 版已经完成，见 [desktop/README.md](desktop/README.md)。`desktop/macos/build.sh` 会产出通用二进制的 `dist/玄炉.app` 与分发用的 `dist/玄炉-macOS.zip`；`--smoke-test` 参数可用于自动化验收。
+macOS 版已经完成，见 [desktop/README.md](desktop/README.md)。`desktop/macos/build.sh` 会产出通用二进制的 `dist/玄炉.app` 与分发用的 `dist/XuanForge-macOS.zip`；`--smoke-test` 参数可用于自动化验收。
 
 ## 如果要把它变成真软件
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================================
 #  玄炉 XUANFORGE · macOS 构建脚本
-#  产出：dist/玄炉.app、dist/玄炉-macOS.zip（可选 dist/玄炉.dmg）
+#  产出：dist/玄炉.app、dist/XuanForge-macOS.zip（可选 dist/XuanForge.dmg）
 #  依赖：Xcode Command Line Tools（swiftc / sips / iconutil / codesign）
 # ============================================================
 set -euo pipefail
@@ -10,7 +10,7 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"                 # xuanforge/
 OUT="${OUT_DIR:-$ROOT/dist}"                    # 默认产物目录（可用 OUT_DIR 覆盖）
 APP="$OUT/玄炉.app"
-DMG="$OUT/玄炉.dmg"
+DMG="$OUT/XuanForge.dmg"
 BUILD="$HERE/.build"
 
 echo "▸ 清理旧产物"
@@ -90,7 +90,7 @@ echo "▸ Ad-hoc 签名"
 codesign --force --deep --sign - "$APP" 2>/dev/null || echo "  (代码签名跳过，本机运行不受影响)"
 
 echo "▸ 制作分发压缩包"
-ZIP="$OUT/玄炉-macOS.zip"
+ZIP="$OUT/XuanForge-macOS.zip"
 rm -f "$ZIP"
 ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP" 2>/dev/null \
   && echo "  ZIP : $ZIP" || echo "  (ZIP 创建失败，可忽略；.app 已可用)"

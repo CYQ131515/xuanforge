@@ -11,7 +11,7 @@
 | 产物 | 位置 | 说明 |
 |---|---|---|
 | **玄炉.app** | `dist/玄炉.app` | 可直接双击运行，已 ad-hoc 签名 |
-| **玄炉-macOS.zip** | `dist/玄炉-macOS.zip` | 分发用压缩包（约 1.8 MB），解压即得 .app |
+| **XuanForge-macOS.zip** | `dist/XuanForge-macOS.zip` | 分发用压缩包（约 1.8 MB），解压即得 `玄炉.app` |
 | **源码 / 构建脚本** | `desktop/macos/` | `main.swift`、`Info.plist`、`build.sh`、`icon.html` |
 
 > `dist/` 是构建产物，已被 `.gitignore` 排除；可用 `OUT_DIR=/some/path` 指定其他输出目录。
@@ -22,7 +22,7 @@
 
 ## 安装
 
-1. 构建，或解压 `dist/玄炉-macOS.zip`（也可直接使用 `dist/玄炉.app`）
+1. 构建，或解压 `dist/XuanForge-macOS.zip`（也可直接使用 `dist/玄炉.app`）
 2. 把 `玄炉.app` 拖进「应用程序」文件夹
 3. 双击打开。如果 macOS 提示「无法验证开发者」：
    - 右键 → 打开 → 再点「打开」，或

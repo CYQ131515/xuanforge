@@ -38,7 +38,7 @@ bash desktop/macos/build.sh
 open dist/玄炉.app
 ```
 
-Requires Xcode Command Line Tools (`swiftc`, `sips`, `iconutil`, `codesign`). The build script selects a compatible SDK, compiles both architectures, generates the app icon, signs ad-hoc and produces `dist/玄炉.app` + `dist/玄炉-macOS.zip`.
+Requires Xcode Command Line Tools (`swiftc`, `sips`, `iconutil`, `codesign`). The build script selects a compatible SDK, compiles both architectures, generates the app icon, signs ad-hoc and produces `dist/玄炉.app` + `dist/XuanForge-macOS.zip`.
 
 The app has a built-in smoke test:
 
