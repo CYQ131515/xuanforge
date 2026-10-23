@@ -1,6 +1,8 @@
 # 玄炉 XUANFORGE · 赛博炼丹炉 LoRA 训练台
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-3ef0c0.svg)](LICENSE)
+[![checks](https://github.com/CYQ131515/xuanforge/actions/workflows/ci.yml/badge.svg)](https://github.com/CYQ131515/xuanforge/actions/workflows/ci.yml)
+[![release](https://img.shields.io/github/v/release/CYQ131515/xuanforge?color=f5c96b)](https://github.com/CYQ131515/xuanforge/releases)
 [![macOS 12+](https://img.shields.io/badge/macOS-12%2B-f5c96b.svg)](desktop/README.md)
 [![No dependencies](https://img.shields.io/badge/dependencies-zero-8b7cff.svg)](#这是什么)
 [![Live demo](https://img.shields.io/badge/demo-GitHub%20Pages-3ef0c0.svg)](https://cyq131515.github.io/xuanforge/)
